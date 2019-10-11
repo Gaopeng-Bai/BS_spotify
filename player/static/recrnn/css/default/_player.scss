@@ -1,0 +1,257 @@
+
+
+#player {
+  width: 100%;
+  height: 50px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: $black;
+  border-top: 5px solid #252525;
+  box-shadow: $boxshadow;
+  color: $white;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  flex-direction: row;
+  opacity: 1.0;
+  transition: linear all 200ms;
+  z-index: 2;
+
+  #track-info {
+    width: 30%;
+    @media screen and(max-width: 768px) {
+      h3 {
+        margin: 10px 0 0;
+        color: $blue;
+      }
+      h4 {
+        margin: 0;
+        font-size: 0.8em;
+      }
+      .cover {
+        display: none;
+      }
+
+    }
+
+    @media screen and(min-width: 769px) {
+      width: 50%;
+      position: relative;
+
+      .inner {
+        position: absolute;
+        top: -95px;
+        display: flex;
+        flex-wrap: nowrap;
+        .cover {
+          height: 125px;
+          width: 125px;
+          margin: 0 5px;
+          box-shadow: $boxshadow;
+          border: 5px solid #252525;
+        }
+
+        .track-artist-wrapper {
+          align-self: flex-end;
+
+          h3, h4 {
+            margin: 0;
+            font-weight: 100;
+            max-width: 220px;
+          }
+          h3 {
+            font-size: 1.15em;
+          }
+          h4 {
+            font-size: 0.8em;
+          }
+        }
+      }
+    }
+
+    @media screen and(min-width: 1170px) {
+      width: 30%;
+    }
+
+  }
+
+  #controller {
+    display: flex;
+    width: 50%;
+    padding: 0 20px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+
+    .button-set {
+      width: 80px;
+      text-align: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      span {
+        border: 1px solid;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        padding: 2px 5px;
+        width: 32px;
+        font-size: 10px;
+        line-height: 10px;
+        display: inline-block;
+        margin: 0 5px;
+        align-self: center;
+        &:hover {
+          color: $blue;
+        }
+      }
+    }
+
+    .progress-set {
+      width: calc(100% - 80px);
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-around;
+      .progress, #progress-bar, .total-duration {
+        display: inline-block;
+        float: left;
+      }
+
+      .progress, .total-duration {
+        text-align: center;
+        @media screen and(max-width: 768px) {
+          width: 22.5%;
+        }
+        @media screen and(min-width: 769px) {
+          width: 40px;
+        }
+      }
+
+      #progress-bar {
+        height: 6px;
+        top: 8px;
+        margin: 0 auto;
+        border: none;
+        border-radius: 0;
+        background: #323232;
+        box-shadow: none;
+
+        @media screen and(max-width: 768px) {
+          width: 55%;
+        }
+        @media screen and(min-width: 769px) {
+          width: calc(100% - 100px);
+        }
+
+        .noUi-handle {
+          display: none;
+          height: 36px;
+          width: 8px;
+          left: -8px;
+          top: -14px;
+          background: #3FB8AF;
+          box-shadow: none;
+          border: none;
+
+          &:after,
+          &:before {
+            content: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+#recommendation-view,
+#player-view {
+  ul li {
+
+    &:nth-child(even) {
+      background: $dark;
+    }
+  }
+}
+
+.loading-recommendation,
+.loading-playlist {
+  text-align: center;
+  display: inherit;
+  font-size: 8px;
+  margin: 10px 0;
+}
+
+.loading-playlist {
+  margin-top: calc(50vh - 256px);
+}
+
+#genres-view,
+#recently-played {
+  width: calc((100% / 2) - 10px);
+
+  header {
+    font-size: 2.0em;
+    padding: 20px;
+    text-align: center;
+  }
+}
+
+#recently-played {
+  header {
+    position: relative !important;
+  }
+  .track {
+    cursor: default;
+    &:hover {
+      background: transparent;
+    }
+    .track-information {
+      width: 100%;
+    }
+    .icon-buttons,
+    .feedback {
+      display: none;
+    }
+
+  }
+}
+
+#____genres-view {
+  ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    li {
+      margin: 0;
+      list-style: none;
+      line-height: 6vh;
+      height: 6vh;
+      text-align: center;
+      border: 1px #252525 solid;
+      cursor: pointer;
+      @media screen and (max-width: 767px) {
+        width: calc((100% / 2) - 2px);
+      }
+      @media screen and (min-width: 768px) {
+        width: calc((100% / 3) - 2px);
+      }
+      @media screen and (min-width: 1024px) {
+        width: calc((100% / 4) - 2px);
+      }
+      @media screen and (min-width: 1440px) {
+        width: calc((100% / 6) - 2px);
+      }
+      @media screen and (min-width: 2560px) {
+        width: calc((100% / 8) - 2px);
+      }
+
+      &.active, &:hover {
+        background: $blue;
+      }
+    }
+  }
+}

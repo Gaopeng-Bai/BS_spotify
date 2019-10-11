@@ -1,0 +1,94 @@
+#welcome {
+  display: inline-flex;
+  flex-flow: row;
+  width: 100%;
+  max-height: 100vh;
+  overflow: scroll;
+
+  .greeting {
+    background: $blue;
+    width: calc(50% - 100px);
+    padding: 50px;
+    display: inline-flex;
+    flex-flow: column;
+    min-height: calc(100vh - 100px);
+    -webkit-box-shadow: 4px 0px 23px 5px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 4px 0px 23px 5px rgba(0, 0, 0, 0.75);
+    box-shadow: 4px 0px 23px 5px rgba(0, 0, 0, 0.75);
+    z-index: 2;
+    .top {
+      display: inline-flex;
+      flex-flow: row;
+      height: 250px;
+      .user-picture {
+        border: 5px solid $dark;
+        -webkit-border-radius: 120px;
+        -moz-border-radius: 120px;
+        border-radius: 120px;
+        width: 240px;
+        height: 240px;
+      }
+      h1 {
+        font-size: 3.4em;
+        font-weight: normal;
+        align-self: center;
+        padding: 0 0 0 22.5px;
+        max-width: 250px;
+      }
+    }
+
+    button, .button {
+      transition: all ease-in 150ms;
+      &:hover {
+        color: $dark;
+        border-color: $dark;
+        transition: all ease-in 150ms;
+      }
+    }
+
+    .description {
+      padding: 25px 0;
+      .well {
+        font-size: 1.2em;
+        line-height: 1.222em;
+        margin-bottom: 20px;
+      }
+    }
+
+  }
+
+  #recently-played, #genres-view {
+    width: 50%;
+    padding: 0 0 0 23px;
+    position: relative;
+    display: inline-flex;
+    flex-flow: column;
+
+    h2 {
+      top: 45px;
+      left: 20px;
+      text-align: center;
+      width: 100%;
+      padding: 45px 0 0;
+    }
+  }
+
+}
+
+#welcome {
+  &.genres-selected {
+    .greeting {
+      transform: translateX(-90%);
+      transition: 300ms;
+    }
+
+    #genres-view {
+      transform: translateX(-50%);
+      transition: 300ms
+    }
+  }
+
+  .greeting, #genres-view {
+    transition: 300ms;
+  }
+}

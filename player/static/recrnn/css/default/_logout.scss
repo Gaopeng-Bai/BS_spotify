@@ -1,0 +1,49 @@
+#logout {
+  line-height: 26px;
+  font-size: 18px;
+  .container {
+    margin: 0 auto;
+    padding: 0 10px;
+    max-width: 720px;
+    width: calc(100% - 20px);
+  }
+  .slogan {
+    margin: 75px 0;
+    color: $blue;
+    font-size: 68px;
+    letter-spacing: -1.8px;
+  }
+
+  h2 {
+    font-size: 34px;
+    margin-bottom: 10px;
+  }
+
+  .btn {
+    &.login {
+      text-decoration: none;
+      background-color: transparent;
+      color: $blue;
+      padding: 10px 40px;
+      border-radius: 3px;
+      margin: 25px 0;
+      display: inline-block;
+      border: 2px solid $blue;
+      animation: pulse_blue 2s infinite !important;
+      font-size: 24px;
+      transition: 200ms all linear;
+
+      &:hover {
+        color: #fff;
+        background-color: $blue;
+      }
+    }
+  }
+
+  footer.container {
+    margin-top: 40vh;
+    font-size: 14px;
+    display: inline-block;
+  }
+
+}

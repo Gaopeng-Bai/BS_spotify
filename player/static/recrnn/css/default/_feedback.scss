@@ -1,0 +1,259 @@
+.feedback {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  width: 220px;
+
+  .feedback-wrapper {
+    width: 100px;
+    display: flex;
+    flex-wrap: nowrap;
+    &.positive,
+    &.negative {
+      padding: 0 5px;
+
+      .value-wrapper {
+        width: 65px;
+        line-height: 20px;
+        margin: 3px -6px;
+
+        .reset {
+          &.active {
+
+          }
+        }
+        .feedback-value {
+          width: 16px;
+          display: inline-block;
+        }
+
+        .reset {
+          opacity: 0.0;
+          transition: 200ms linear opacity;
+          transition-delay: 0s;
+          padding: 0 8px;
+          margin: 0 -6px;
+          line-height: 20px;
+        }
+      }
+
+      .button {
+        text-align: center;
+        display: inline-block;
+        border: 1px solid grey;
+        line-height: 25px;
+        height: 25px;
+        width: 25px;
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+        transition: all 200ms linear;
+        z-index: 1;
+
+        .intensity {
+          position: absolute;
+          opacity: 0.0;
+          transition: linear all 200ms;
+          top: -30px;
+          left: calc((100% / 2) - 25px);
+          height: 10px;
+          width: 40px;
+          padding: 10px 5px;
+          border-radius: 5px;
+          line-height: 10px;
+          color: #fff;
+          animation: moveUp 200ms infinite;
+        }
+
+      }
+
+      // while giving feedback
+      &.hold {
+        .button {
+          .intensity {
+            display: inline-block;
+            opacity: 1.0;
+            transform: translate(0px, -10px);
+            transition: linear all 200ms;
+            color: #fff !important;
+          }
+        }
+
+      }
+      &:hover {
+        &.hold {
+          animation: pop 200ms infinite !important;
+        }
+      }
+
+      &.active {
+        &:hover {
+          .reset {
+            opacity: 1.0;
+            transition-delay: 2s;
+            display: inline-block;
+            transition: 200ms all linear;
+            &:hover {
+              background-color: #3c3c3c;
+            }
+          }
+        }
+      }
+    }
+
+    &.positive {
+      justify-content: flex-end;
+      &.hold {
+        .button {
+          .intensity {
+            background: $blue;
+          }
+        }
+      }
+
+      .value-wrapper {
+        text-align: right;
+
+        .feedback-value {
+          background-color: $blue;
+          padding: 0 12px;
+          -webkit-border-radius: 3px 0 0 3px;
+          -moz-border-radius: 3px 0 0 3px;
+          border-radius: 3px 0 0 3px;
+        }
+      }
+
+      &:not(.hold) {
+        .button {
+          animation: pulse_blue 2s infinite;
+        }
+
+      }
+
+      .button {
+        &:hover {
+          animation: pulse_blue 2s infinite;
+          color: $blue !important;
+          border-color: $blue !important;
+
+        }
+      }
+
+      &.hold {
+        .button {
+          &:hover {
+            animation: pulse_blue 2s infinite !important;
+          }
+        }
+      }
+
+      &.active {
+        .button {
+          animation: none !important;
+          background-color: $blue !important;
+          border-color: $blue !important;
+          color: #fff !important;
+        }
+        &:hover {
+          .reset {
+            border-radius: 3px 0 0 3px;
+            &:hover {
+              background-color: rgba($blue, 0.5);
+            }
+
+          }
+        }
+
+      }
+    }
+
+    &.negative {
+      justify-content: flex-start;
+      &.hold {
+        .button {
+          .intensity {
+            background: $orange;
+          }
+        }
+      }
+
+      .value-wrapper {
+        text-align: left;
+        .feedback-value {
+          background-color: $orange;
+          padding: 0 12px;
+          -webkit-border-radius: 0 3px 3px 0;
+          -moz-border-radius: 0 3px 3px 0;
+          border-radius: 0 3px 3px 0;
+        }
+      }
+      &:not(.hold) {
+        .button {
+          animation: pulse_orange 2s infinite;
+        }
+
+      }
+      .button {
+        &:hover {
+          animation: pulse_orange 2s infinite;
+          color: $orange !important;
+          border-color: $orange !important;
+        }
+      }
+
+      &.hold {
+        .button {
+          &:hover {
+            animation: pulse_orange 2s infinite !important;
+          }
+        }
+      }
+
+      &.active {
+        .button {
+          animation: none !important;
+          background-color: $orange !important;
+          border-color: $orange !important;
+          color: #fff !important;
+        }
+        &:hover {
+          .reset {
+            border-radius: 0 3px 3px 0;
+            &:hover {
+              background-color: rgba($orange, 0.5);
+            }
+          }
+        }
+      }
+    }
+
+  }
+  // with given feedback
+  &.given {
+    .positive,
+    .negative {
+      .button {
+        animation: none !important;
+        &:not(.hold) {
+          color: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+
+    }
+    .positive {
+      .button {
+        &:hover {
+          animation: pulse_blue 2s infinite !important;
+        }
+      }
+    }
+    .negative {
+      .button {
+        &:hover {
+          animation: pulse_orange 2s infinite !important;
+        }
+      }
+    }
+  }
+}

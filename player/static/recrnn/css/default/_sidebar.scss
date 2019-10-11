@@ -1,0 +1,131 @@
+#app {
+  &.active_sidebar {
+    main {
+      width: 70%;
+
+      .search-controls {
+        width: 80%;
+      }
+    }
+
+    #player {
+      bottom: -260px;
+      opacity: 0;
+    }
+
+    aside {
+      right: 0;
+      opacity: 1.0;
+    }
+  }
+}
+
+aside {
+  width: 30%;
+  min-width: 400px;
+  position: fixed;
+  right: -30%;
+  top: 0;
+  height: 100%;
+  opacity: 0.0;
+  transition: linear all 200ms;
+  overflow: auto;
+
+  .inner {
+    margin-bottom: 150px;
+  }
+
+  .sidebar-recommendations {
+    margin-top: 25px;
+
+    .loading-recommendation, .loading-playlist {
+      display: inline-block;
+    }
+  }
+
+  .sidebar-playlist,
+  .sidebar-recommendations {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    &.playlist-header,
+    &.recommended-for-you-header {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.2em;
+    }
+
+    &.playlist-header {
+      background: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    &.recommended-for-you-header {
+      background: rgba(22, 160, 133, 0.3) !important;
+    }
+
+    &:nth-child(even) {
+      background: $dark;
+    }
+
+    h2 {
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+
+      &.recommended-for-you-header {
+        background: rgba(22, 160, 133, 0.15) !important;
+      }
+
+      &.playlist-header {
+        background: rgba(0, 0, 0, 0.1) !important;
+      }
+    }
+
+    .recommended-tracks {
+      background: rgba(22, 160, 133, 0.5);
+    }
+
+    .track {
+      display: flex;
+      flex-wrap: wrap;
+      position: relative;
+      line-height: 1em;
+      padding: 5px;
+      &:hover {
+        background: transparent;
+      }
+
+      &.playing {
+        color: $blue;
+
+        span.artist .song-artist:after {
+          color: $blue !important;
+        }
+      }
+
+      .icons {
+        position: absolute;
+        left: -12px;
+        top: 16px;
+      }
+
+      .title,
+      .artist {
+        display: block;
+      }
+      .title {
+        font-size: 1.1em;
+        width: 100%;
+      }
+      .artist {
+        width: 100%;
+        font-size: 0.8em;
+      }
+      .album,
+      .duration {
+        display: none;
+      }
+    }
+  }
+}

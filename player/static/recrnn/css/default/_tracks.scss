@@ -1,0 +1,406 @@
+.tracklist {
+
+  li {
+    &:nth-child(even) {
+      background: rgba(0, 0, 0, 0.05) !important;
+    }
+  }
+
+  &.last-played-tracks {
+    .track {
+      .track-information {
+        opacity: 0.5;
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+
+        .feedback {
+          opacity: 1.0 !important;
+          color: $white;
+          .icon {
+            opacity: 1.0;
+          }
+        }
+      }
+
+    }
+  }
+
+  &.initial-recommendations {
+    .track {
+      &:hover {
+        background: #16A085;
+
+        &.icon,
+        &.add,
+        &.add-and-play {
+          color: $white;
+
+          &:hover {
+            opacity: 1.0;
+            color: $white;
+          }
+        }
+
+        .feedback {
+          span {
+            color: $dark;
+            opacity: 1.0;
+            &:hover,
+            &.active {
+              color: $white !important;
+              opacity: 1.0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.track,
+.track-heading {
+  display: flex;
+  justify-content: flex-start;
+  transition: linear all 200ms;
+  line-height: 1.5em;
+  padding: 10px;
+
+  .icon-buttons {
+    width: 80px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+
+    .icon {
+      opacity: 0.0;
+
+      &.listening {
+        opacity: 1.0;
+      }
+
+    }
+
+    span {
+      width: 30px;
+      display: inline-block;
+      text-align: center;
+    }
+  }
+
+  &.available {
+    opacity: 1.0;
+  }
+
+  &.not_available {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .track-information {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+
+    &.feedback-enabled {
+      width: calc(100% - 300px);
+    }
+
+    &.feedback-disabled {
+      width: 100%;
+    }
+
+    &.preparation-recently-played {
+      width: 100%;
+    }
+
+    &.player-list,
+    &.sidebar-list,
+    &.preparation,
+    &.preparation-search,
+    &.player-search {
+      width: calc(100% - 160px);
+      padding: 0 0 0 10px;
+    }
+
+    &.player-recommendation-list,
+    &.sidebar-recommendation-list {
+      width: calc(100% - 100px);
+      padding: 0 0 0 10px;
+    }
+
+    // Todo: add different scope widths
+
+    .main {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      width: 90%;
+    }
+
+    .time {
+      width: 10%;
+      align-self: center;
+      font-size: 1.1em;
+      .duration {
+        width: 100%;
+      }
+    }
+
+    .title {
+      font-size: 1.2em;
+      font-weight: 600;
+      width: 100%;
+    }
+    .artist,
+    .album,
+    .duration,
+    .last-played {
+      font-size: 0.8em;
+    }
+    .artist {
+
+    }
+    .album {
+      padding: 0 0 0 6px;
+      &:before {
+        content: " | ";
+      }
+    }
+    .last-played {
+      width: 100%;
+      font-style: italic;
+    }
+  }
+
+  .feedback,
+  .track-type,
+  .icon-buttons {
+    align-self: center;
+  }
+
+  .feedback {
+    width: 220px;
+    display: flex;
+    flex-wrap: nowrap;
+    color: $white !important;
+    justify-content: center;
+
+    span {
+      text-align: center;
+
+      &.remove {
+        margin: 0 auto;
+        &:hover {
+          color: $blue !important;
+          opacity: 1.0;
+        }
+      }
+    }
+  }
+
+  .track-type {
+    width: 30px;
+    text-align: center;
+    // TODO: type specific items
+    span {
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      display: inline-block;
+      background: $white;
+    }
+  }
+
+  span {
+    &.icon,
+    &.icons,
+    &.duration {
+      display: flex;
+
+      &.add,
+      &.add-and-play {
+        display: inline-block;
+      }
+    }
+
+    &.artist {
+      .song-artist {
+        display: inline-block;
+
+        &.clickable {
+
+          &:hover {
+
+          }
+        }
+
+        &:after {
+          display: inline-block;
+          content: ", ";
+          color: #fff;
+          padding: 0 4px 0 0;
+          margin: 0 0 0 -3px;
+        }
+
+        &:last-child:after {
+          content: "";
+        }
+      }
+    }
+
+  }
+
+  &:hover {
+    background: #16A085;
+    .icon-buttons {
+      .icon {
+        opacity: 1.0;
+        color: $white;
+
+        &.listening {
+          display: none;
+          transition: none;
+        }
+        &:hover {
+          color: rgba(0, 0, 0, 0.4);
+        }
+      }
+    }
+    .feedback {
+      .remove {
+        &:hover {
+          color: #fff !important;
+        }
+      }
+    }
+  }
+
+  &.playing {
+    color: $blue;
+    background: #252525;
+  }
+}
+
+.last-played-tracks,
+.currently-playing,
+.next-up-tracks {
+
+  .track {
+    // border: 1px solid $black;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin: 10px 0;
+    position: relative;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1) !important;
+
+      .feedback {
+        opacity: 1.0 !important;
+        color: $white;
+        .icon {
+          opacity: 1.0;
+        }
+      }
+    }
+
+    &:after {
+      position: absolute;
+      bottom: -15px;
+      left: calc(50% - 5px);
+      content: "";
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      // border-top: 15px solid $black;
+    }
+
+  }
+}
+
+.track-heading {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 34px;
+}
+
+
+
+.next-up-tracks {
+  .track {
+    &:hover {
+      .draggable-icon {
+        display: flex !important;
+
+      }
+    }
+  }
+}
+
+.recommended-tracks,
+.initial-recommendations {
+  .icon-buttons .icon {
+    opacity: 1.0;
+  }
+}
+
+.next-recommended-tracks {
+  padding: 0 0 25px;
+  margin-top: 50px;
+
+  .track {
+    .icon-buttons {
+      // margin-right: 10px;
+
+      .icon {
+        opacity: 1.0;
+        display: inline-block;
+        text-align: center;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+
+        &:hover {
+          color: rgba(0, 0, 0, 0.4) !important;;
+        }
+      }
+    }
+  }
+
+  h2 {
+    text-align: center;
+    background: rgba(22, 160, 133, 0.3) !important;
+    margin: 0;
+    padding: 20px 0;
+  }
+  .inner {
+    padding: 10px 0;
+    background: $blue;
+
+    ul {
+      li {
+        background: transparent;
+        &:nth-child(even) {
+          background: rgba(0, 0, 0, 0.1) !important;
+          .track {
+            &:hover {
+              background: transparent !important;
+            }
+          }
+        }
+
+        .track {
+          &:hover {
+            background: rgba(0, 0, 0, 0.1) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+

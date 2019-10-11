@@ -1,0 +1,191 @@
+body {
+  font-family: $source_sans_pro;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: $white;
+  background-color: $darkgrey;
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.9em;
+  margin-bottom: 24px;
+}
+
+h2 {
+  font-size: 1.7em;
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-size: 1.5em;
+  margin-bottom: 6px;
+}
+
+h4 {
+  font-size: 1.3em;
+  margin: 40px 0 10px;
+}
+
+a {
+  color: $white;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  li {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+main {
+  display: inline-flex;
+  flex-flow: column;
+  width: 100%;
+  transition: linear all 200ms;
+}
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.error {
+  background: #d9534f;
+  color: #fff;
+  padding: 20px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.icon-buttons {
+  .fa-play,
+  .fa-plus,
+  .fa-arrows-v {
+    padding: 5px;
+    margin: -5px;
+    cursor: pointer;
+  }
+
+}
+
+.draggable-icon {
+  display: none !important;
+}
+
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
+.sortable-chosen {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+button {
+  @media screen and(max-width: 768px) {
+    color: $white !important;
+    font-size: 1.4em;
+  }
+
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #fff;
+}
+
+::-moz-placeholder { /* Firefox 19+ */
+  color: #fff;
+}
+
+:-ms-input-placeholder { /* IE 10+ */
+  color: #fff;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  color: #fff;
+}
+
+.container {
+
+  margin: 0 auto;
+  // Small devices (landscape phones, 576px and up)
+  @media (min-width: 576px) {
+    width: 100%;
+  }
+
+  // Medium devices (tablets, 768px and up)
+  @media (min-width: 768px) {
+    width: 720px;
+  }
+
+  // Large devices (desktops, 992px and up)
+  @media (min-width: 992px) {
+    width: 960px;
+  }
+
+  // Extra large devices (large desktops, 1200px and up)
+  @media (min-width: 1200px) {
+    width: 1200px;
+  }
+
+}
+
+.blue {
+  color: $blue;
+}
+
+.dark {
+  color: $dark;
+}
+
+.button {
+  &.continue {
+    border: 2px solid $white;
+    padding: 5px 15px;
+    cursor: pointer;
+    text-align: center;
+    display: inherit;
+    width: 200px;
+    margin: 20px auto;
+
+    &:hover {
+      color: #16A085;
+      border: 2px solid #16A085;
+    }
+
+    &.disabled {
+      border: 2px solid darkgrey;
+      color: darkgray;
+      cursor: not-allowed;
+    }
+  }
+}
+
+#player-view, #search-view {
+  .container {
+    margin-top: 120px;
+    margin-bottom: 200px;
+  }
+}

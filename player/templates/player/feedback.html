@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="feedback">
+    <span class="icon">F</span>
+    <span class="intensity">100</span>
+</div>
+
+<script>
+    let feedbackElements = document.getElementsByClassName('feedback');
+    let feedback = 0;
+    let interval;
+
+    Array.from(feedbackElements).forEach(function (element) {
+        element.addEventListener('mousedown', function (event) {
+            this.setAttribute("class", "feedback active");
+
+            interval = setInterval(function () {
+                feedback++;
+            }, 100)
+        });
+
+        element.addEventListener('mouseup', function () {
+            this.setAttribute("class", "feedback");
+            clearInterval(interval);
+        })
+    });
+</script>
+
+<style>
+    body {
+        text-align: center;
+        width: 100%;
+    }
+
+    .feedback {
+        margin: 50px auto;
+        text-align: center;
+        display: inline-block;
+        border: 1px solid grey;
+        line-height: 100px;
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+        cursor: pointer;
+        animation: pulse 2s infinite;
+        position: relative;
+    }
+
+    .feedback:hover {
+        border-color: #03A87C;
+        animation: pulse 2s infinite;
+    }
+
+    .feedback .intensity {
+        position: absolute;
+        opacity: 0.0;
+        transition: linear all 100ms;
+        top: -30px;
+        left: calc((100% / 2) - 25px);
+        height: 10px;
+        display: inline-block;
+        width: 40px;
+        background: #03A87C;
+        padding: 10px 5px;
+        border-radius: 5px;
+        line-height: 10px;
+        color: #fff;
+    }
+
+    .feedback.active .intensity {
+        opacity: 1.0;
+        transform: translate(0px, -10px);
+
+    }
+
+    @-webkit-keyframes pulse {
+        0% {
+            -webkit-box-shadow: 0 0 0 0 rgba(3, 168, 124, 0.4);
+        }
+        70% {
+            -webkit-box-shadow: 0 0 0 10px rgba(3, 168, 124, 0);
+        }
+        100% {
+            -webkit-box-shadow: 0 0 0 0 rgba(3, 168, 124, 0);
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            -moz-box-shadow: 0 0 0 0 rgba(3, 168, 124, 0.4);
+            box-shadow: 0 0 0 0 rgba(3, 168, 124, .4);
+        }
+        70% {
+            -moz-box-shadow: 0 0 0 10px rgba(3, 168, 124, 0);
+            box-shadow: 0 0 0 10px rgba(3, 168, 124, 0);
+        }
+        100% {
+            -moz-box-shadow: 0 0 0 0 rgba(3, 168, 124, 0);
+            box-shadow: 0 0 0 0 rgba(3, 168, 124, 0);
+        }
+    }
+</style>
+
+</body>
+</html>

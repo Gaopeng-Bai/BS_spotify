@@ -1,0 +1,232 @@
+{
+  "acoustic": [
+    "acoustic"
+  ],
+  "alternative": [
+    "alternative",
+    "alt-rock"
+  ],
+  "ambient": [
+    "ambient",
+    "chill"
+  ],
+  "black-metal": [
+    "black-metal"
+  ],
+  "blues": [
+    "blues"
+  ],
+  "breakbeat": [
+    "breakbeat"
+  ],
+  "british": [
+    "british"
+  ],
+  "classical": [
+    "classical"
+  ],
+  "club": [
+    "club"
+  ],
+  "country": [
+    "country"
+  ],
+  "dance": [
+    "dance"
+  ],
+  "dancehall": [
+    "dancehall"
+  ],
+  "death-metal": [
+    "death-metal"
+  ],
+  "deep-house": [
+    "deep-house"
+  ],
+  "disco": [
+    "disco"
+  ],
+  "disney": [
+    "disney"
+  ],
+  "drum-and-bass": [
+    "drum-and-bass"
+  ],
+  "dubstep": [
+    "dubstep",
+    "dub",
+    "post-dubstep"
+  ],
+  "edm": [
+    "edm"
+  ],
+  "electronic": [
+    "electronic",
+    "electro"
+  ],
+  "emo": [
+    "emo"
+  ],
+  "folk": [
+    "folk"
+  ],
+  "french": [
+    "french"
+  ],
+  "funk": [
+    "funk"
+  ],
+  "garage": [
+    "garage"
+  ],
+  "gospel": [
+    "gospel"
+  ],
+  "goth": [
+    "goth"
+  ],
+  "grindcore": [
+    "grindcore"
+  ],
+  "grunge": [
+    "grunge"
+  ],
+  "guitar": [
+    "guitar"
+  ],
+  "hard-rock": [
+    "hard-rock"
+  ],
+  "hardcore": [
+    "hardcore", "hardstyle"
+  ],
+  "heavy-metal": [
+    "heavy-metal"
+  ],
+  "hip-hop": [
+    "hip-hop"
+  ],
+  "house": [
+    "house",
+    "chicago-house"
+  ],
+  "indie": [
+    "indie"
+  ],
+  "indie-pop": [
+    "indie-pop"
+  ],
+  "industrial": [
+    "industrial"
+  ],
+  "jazz": [
+    "jazz"
+  ],
+  "latino": [
+    "latino",
+    "latin"
+  ],
+  " metal": [
+    "metal",
+    "metal-misc"
+  ],
+  " metalcore": [
+    "metalcore"
+  ],
+  "minimal-techno": [
+    "minimal-techno"
+  ],
+  " new-age": [
+    "new-age"
+  ],
+  " opera": [
+    "opera"
+  ],
+  " party": [
+    "party"
+  ],
+  " piano": [
+    "piano"
+  ],
+  "pop": [
+    "pop"
+  ],
+  "power-pop": [
+    "power-pop"
+  ],
+  "progressive-house": [
+    "progressive-house"
+  ],
+  "psych-rock": [
+    "psych-rock"
+  ],
+  "punk": [
+    "punk",
+    "punk-rock"
+  ],
+  "r-n-b": [
+    "r-n-b"
+  ],
+  "reggae": [
+    "reggae",
+    "reggaeton"
+  ],
+  "rock": [
+    "rock"
+  ],
+  "rock-n-roll": [
+    "rock-n-roll"
+  ],
+  "rockabilly": [
+    "rockabilly"
+  ],
+  "romance": [
+    "romance"
+  ],
+  "salsa": [
+    "salsa"
+  ],
+  "samba": [
+    "samba"
+  ],
+  "singer-songwriter": [
+    "singer-songwriter",
+    "songwriter"
+  ],
+  "ska": [
+    "ska"
+  ],
+  "soul": [
+    "soul"
+  ],
+  "soundtracks": [
+    "soundtracks",
+    "movies",
+    "pop-film"
+  ],
+  "spanish": [
+    "spanish"
+  ],
+  "summer": [
+    "summer"
+  ],
+  "synth-pop": [
+    "synth-pop"
+  ],
+  "tango": [
+    "tango"
+  ],
+  "techno": [
+    "techno",
+    "detroit-techno"
+  ],
+  "trance": [
+    "trance"
+  ],
+  "trip-hop": [
+    "trip-hop"
+  ],
+  "world-music": [
+    "world-music"
+  ]
+}

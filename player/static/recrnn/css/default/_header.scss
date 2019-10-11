@@ -1,0 +1,42 @@
+
+.PLAYER, .SEARCH {
+  header {
+    position: fixed;
+    width: 100% !important;
+    height: 100px;
+    display: block;
+    background: $dark;
+    z-index: 2;
+    text-align: center;
+
+    .inner {
+      display: inline-flex;
+      width: 1200px;
+      margin: 0 auto;
+    }
+
+    .user {
+      display: none;
+      // display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      margin: 35px 65px;
+      width: 50%;
+
+      img.user-picture {
+        width: 100px;
+        margin: 0 10px 0 0;
+        max-height: 100px;
+        border-radius: 60px;
+        border: 5px solid #252525;
+      }
+
+      h1 {
+        align-self: center;
+      }
+    }
+
+  }
+}
+
+

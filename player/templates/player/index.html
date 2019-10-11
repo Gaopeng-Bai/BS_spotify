@@ -1,0 +1,601 @@
+{% load static %}
+{% load sass_tags %}
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>RecRNN Player</title>
+    <link href="{% sass_src 'recrnn/css/default/main.scss' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static "recrnn/css/default/nouislider.min.css" %}">
+    <link rel="stylesheet" href="{% static "recrnn/font-awesome/css/font-awesome.min.css" %}">
+</head>
+<body>
+
+{#verbatim: escape django delimiters to use vue.js delimiter inside the verbatim block #}
+
+{% verbatim %}
+<div id="app" v-cloak v-bind:class="[ view ]">
+    <main v-cloak>
+        <div v-if="error_message.length > 0" class="error">
+            <div class="message">
+                <span class="bold">Error: </span>[[ error_message ]]
+            </div>
+        </div>
+        <!-- HEADER -->
+        <!-- TODO: 'genres_view'? -->
+        <header class="container" v-show="view !== 'INITIAL'">
+            <template v-if="view !== 'INITIAL'">
+                <div class="inner">
+                    <div class="user" v-if="spotify_user">
+                        <a class="btn logout" href="./logout"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+                        <template v-if="spotify_user.images.length > 0">
+                            <img class="user-picture" v-bind:src="[[ spotify_user.images[0].url ]]"/>
+                        </template>
+
+                        <template v-if="spotify_user.images.length === 0">
+                            <!-- TODO: Change default picture -->
+                            <img class="user-picture" src="/static/recrnn/images/profile-icon.png"/>
+                        </template>
+                        <h1>Hey [[ spotify_user.display_name ]]! <span
+                                v-if="view === 'GENRE_RECS'">Choose a track!</span></h1>
+                    </div>
+
+                    <div class="search-controls">
+                    <span v-show="view === 'SEARCH'" v-on:click="previous()" class="back">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </span>
+                        <input v-model="search_query" v-on:click="viewTransition('SEARCH')" class="search" type="text"
+                               placeholder="Search...">
+                    </div>
+
+                </div>
+
+            </template>
+
+
+        </header>
+
+        <!-- Genre View / Step 1-->
+        <template v-if="view === 'INITIAL'">
+            <div class="wrapper" v-if="genres_all.length > 0 || recently_played.length > 0">
+                <section id="welcome" v-bind:class="{'genres-selected' : genres_selected.length !== 0}">
+                    <div class="greeting">
+                        <div class="top">
+
+                            <template v-if="spotify_user.images.length > 0">
+                                <img class="user-picture" v-bind:src="[[ spotify_user.images[0].url ]]"/>
+                            </template>
+
+                            <template v-if="spotify_user.images.length === 0">
+                                <img class="user-picture" src="/static/recrnn/images/profile-icon.png"/>
+                            </template>
+                            <h1>Hi <span class="user-name">[[ spotify_user.display_name]]</span>!</h1>
+                        </div>
+
+                        <div class="description">
+                            <p class="well">Beschreibung. Willkommen. Blablabla...</p>
+
+                            <template v-if="recently_played.length > 0 && !genre_selection">
+                                <p class="well">Damit du direkt loslegen kannst, kannst du einfach mit deinen zuletzt
+                                    gehörten Songs starten. Diese Songs siehst du
+                                    rechts. Du kannst gleich natürlich noch weitere Songs abspielen.</p>
+                            </template>
+
+                            <template v-if="genre_selection">
+                                <p class="well">Damit wir etwas finden was dir gefällt, wähle bitte <span
+                                        class="dark">[[ 1 - Object.keys(genres_selected).length]]</span> Genre aus der
+                                    Liste aus.</p>
+
+                                <span class="button continue back" v-on:click="genre_selection = false">Zurück</span>
+
+                            </template>
+
+
+                        </div>
+
+                        <div class="bottom">
+
+                            <template v-if="recently_played.length > 0 && !genre_selection">
+                                <template v-if="!recently_played_available()">
+                                    <span class="button continue disabled">Sieht gut aus! Los geht's!</span>
+                                    <p class="well">So wie es aussieht, können wir deine zuletzt gehörten Songs nicht
+                                        abspielen.</p>
+
+                                </template>
+
+                                <template v-else>
+                                    <span class="button continue" v-on:click="viewTransition('PLAYER')">Sieht gut aus! Los geht's!</span>
+                                </template>
+
+                                <template v-if="recently_played.length !== 0 && genre_selection">
+                                                       <span v-if="recently_played_available()" class="button continue"
+                                                             v-on:click="viewTransition('PLAYER', )"
+                                                             v-bind:class="{pending : requests_pending !== 0}">Sieht gut aus! Los geht's!</span>
+                                    <p class="well">Möchtest du lieber etwas anderes hören? Klar kein Problem.</p>
+                                </template>
+
+
+                                <span class="button continue select-genre"
+                                      v-on:click="genre_selection = true"
+                                      v-bind:class="{pending : requests_pending !== 0}">Ich möchte etwas anderes hören...</span>
+
+                            </template>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <template v-if="recently_played && recently_played.length > 0 && !genre_selection">
+
+                        <div id="recently-played">
+                            <h2>Recently Played</h2>
+                            <ul class="tracklist">
+                                <li v-for="item in recently_played">
+                                    <playlist-track-item :track="item.track" :type="'recently_played'"
+                                                         :played_at="item.played_at"
+                                                         :scope="[0,0,0,0,0,1,0]"></playlist-track-item>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                    </template>
+
+                    <template v-if="recently_played && recently_played.length === 0 || genre_selection">
+
+                        <div id="genres-view">
+                            <h2>Genres</h2>
+                            <ul class="genres-list">
+                                <li v-bind:class="{active : genres_selected.indexOf(genre) !== -1}"
+                                    v-on:click="selectGenre(genre)"
+                                    v-for="genre in Object.keys(show_genres())">[[ genre ]]
+                                </li>
+                                <li class="more-genres" v-on:click="show_more_genres()">More</li>
+                            </ul>
+
+                            <button v-on:click="viewTransition(next_view)" class="continue-with-genres"
+                                    v-if="next_view === 'GENRE_RECS'">Ok, los geht's!
+                            </button>
+
+                        </div>
+
+                    </template>
+
+
+                </section>
+
+            </div>
+
+
+        </template>
+
+
+        <!-- Genre View / Step 1: Select Use your recently played Tracks -->
+
+
+        <!-- Recommendation View / Step 2: Select Track -->
+        <section v-if="view === 'GENRE_RECS'" id="recommendation-view">
+            <div class="container">
+                <ul class="tracklist initial-recommendations">
+                    <li v-for="track in spotify_recommendation.tracks">
+                        <playlist-track-item :track="track" :type="'sp_rec'"
+                                             :scope="[0,0,1,0,0,0,0]"></playlist-track-item>
+                    </li>
+                </ul>
+            </div>
+
+        </section>
+
+
+        <!-- Search View -->
+        <section v-if="view === 'SEARCH'" id="search-view">
+            <div class="container">
+                <h2 v-if="search_query.length > 0">Search results for <span
+                        class="search-term">[[ search_query ]]</span></h2>
+
+                <!--
+                <div v-show="search_query.length === 0 && search_history.length > 0" class="last-searches">
+                    <h2>Last Searches:</h2>
+                    <ul class="search-history">
+                        <li v-for="item in search_history"
+                            v-on:click="do_search(item.target), search_query = item.target">
+                            <span>[[ item.target ]]</span>
+                        </li>
+                    </ul>
+                </div>
+
+                -->
+                <div v-show="search_query.length === 0 && search_history.length === 0" class="search-hint">
+                    <p>Find your favorite song from the artists you like. Just start typing...</p>
+                </div>
+
+
+                <div v-if="(Object.keys(search.result).length > 0 && search_query.length !== 0) || show_searched_item">
+
+                    <div v-if="search.result.tracks" class="search tracks">
+
+                        <h4>Tracks</h4>
+                        <ul class="tracklist search-result-tracks">
+                            <li v-for="track in search.result.tracks.items">
+                                <playlist-track-item :track="track" :type="'search'"
+                                                     :scope="[0,1,1,0,0,0,0]"></playlist-track-item>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div v-if="search.result.top_tracks" class="search tracks">
+
+                        <h4>Top Tracks</h4>
+                        <ul class="tracklist search-result-tracks">
+                            <li v-for="track in search.result.top_tracks">
+                                <playlist-track-item :track="track" :type="'search'"
+                                                     :scope="[0,1,1,0,0,0,0]"></playlist-track-item>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div v-if="search.result.albums" class="search albums">
+
+                        <h4>Albums</h4>
+                        <ul class="search-result-albums">
+                            <li v-on:click="get_album_details(album), add_to_search_history(album)"
+                                v-for="album in search.result.albums.items">
+                                <img class="album cover" v-bind:src="[[ getCover(1, album)]]"/>
+                                <span class="album title">[[ album.name ]]</span>
+                                <span class="album artist">
+                                    <span class="album-artist" v-for="a in album.artists">
+                                    [[ a.name ]]
+                                    </span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div v-if="search.result.artists" class="search artists">
+                        <h4>Artists</h4>
+                        <ul class="search-result-artists">
+                            <li v-on:click="get_artist_details(artist), add_to_search_history(artist)"
+                                v-for="artist in search.result.artists.items">
+                                <div class="artist cover">
+                                    <img v-bind:src="[[ getCover(1, artist)]]"/>
+                                </div>
+                                <span class="artist-name">[[ artist.name ]]</span>
+                                <!-- TODO: Check if user is a follower -->
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div v-if="search.result.album" class="search album tracklist">
+                        <img v-bind:src="[[ getCover(1, search.result.album)]]"/>
+                        <h4>Album: [[ search.result.album.name]]</h4>
+                        <ul class="tracklist search-result-album-tracks">
+                            <li v-for="track in search.result.album.tracks.items">
+                                <playlist-track-item :track="track" type="'search'"
+                                                     :scope="[0,1,1,0,0,0,0]"></playlist-track-item>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div v-if="Object.keys(search).length === 0 && search_query.length === 0 && search_query_history.length === 0">
+                    Nothing searched yet...
+                </div>
+
+            </div>
+
+
+        </section>
+
+        <!-- Player View - Playlist -->
+        <section v-if="view === 'PLAYER'" id="player-view">
+
+            <div class="container" v-if="playlist.tracks">
+
+                <template>
+                    <!-- Last Played -->
+                    <div v-if="playlist.tracks" class="tracklist last-played-tracks">
+
+                        <div v-if="index < getCurrentlyPlayingIndex()"
+                             v-for="(item, index) in playlist.tracks.items" :key="item.track.id">
+                            <playlist-track-item :track="item.track" :feedback_value="item.feedback"
+                                                 :scope="[0,0,0,0,1,0,1]"></playlist-track-item>
+                        </div>
+                    </div>
+
+                    <!-- Currently Playing -->
+                    <div v-if="playlist.tracks" class="tracklist currently-playing">
+
+                        <playlist-track-item v-if="spotify_player"
+                                             :track="playlist.tracks.items[getCurrentlyPlayingIndex()].track"
+                                             :type="playlist.tracks.items[getCurrentlyPlayingIndex()].type"
+                                             :feedback_value="playlist.tracks.items[getCurrentlyPlayingIndex()].feedback"
+                                             :scope="[0,0,0,0,1,0,1]"></playlist-track-item>
+
+                    </div>
+
+                    <!-- Next Up  -->
+                    <draggable v-if="playlist.tracks" :list="playlist.tracks.items"
+                               @start="dragging=true, locked=Date.now()" @end="dragging=false" @change="draggableUpdate"
+                               :options="{group:'playlist-draggable', sort: false}"
+                               class="tracklist next-up-tracks">
+                        <div v-if="index > getCurrentlyPlayingIndex()"
+                             v-for="(item, index) in playlist.tracks.items" :key="item.track.id">
+                            <playlist-track-item :track="item.track" :type="item.type"
+                                                 :scope="[1,0,0,1,0,0,1]"></playlist-track-item>
+                        </div>
+                    </draggable>
+
+                </template>
+
+                <!-- Next recommended tracks -->
+                <template v-if="recommendations">
+                    <div id="recArea" class="next-recommended-tracks">
+                        <h2>Your Recommendations</h2>
+                        <div class="inner">
+                            <draggable :list="recommendations" @start="dragging=true, locked=Date.now()"
+                                       @end="dragging=false" @change="draggableUpdate"
+                                       :options="{group:'playlist-draggable'}" class="tracklist recommended-tracks">
+                                <div v-if="recommendations.length > 0" v-for="item in recommendations" :key="item.id">
+                                    <playlist-track-item :track="item" :scope="[1,1,0,0,0,0,1]"></playlist-track-item>
+                                </div>
+                            </draggable>
+                            <div v-if="waitingForRecs()" class="loading-recommendation">
+                                <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+
+            </div>
+            <div class="container" v-if="!recommendations">
+                <div class="loading-playlist">
+                    <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+
+    <aside>
+
+        <div v-if="spotify_player && playlist" class="inner">
+            <div class="sidebar-playlist">
+                <h2 class="playlist-header">Your Playlist</h2>
+                <!-- Last Played -->
+                <div v-if="playlist.tracks" class="tracklist last-played-tracks">
+
+                    <div v-if="index < getCurrentlyPlayingIndex()"
+                         v-for="(item, index) in playlist.tracks.items" :key="item.track.id">
+                        <playlist-track-item :track="item.track" :scope="[0,0,0,0,1,0,1]"></playlist-track-item>
+                    </div>
+                </div>
+
+                <!-- Currently Playing -->
+                <div v-if="playlist.tracks" class="tracklist currently-playing">
+
+                    <playlist-track-item v-if="spotify_player"
+                                         :track="playlist.tracks.items[getCurrentlyPlayingIndex()].track"
+                                         :type="playlist.tracks.items[getCurrentlyPlayingIndex()].type"
+                                         :scope="[0,0,0,0,1,0,1]"></playlist-track-item>
+
+                </div>
+
+                <!-- Next Up  -->
+                <draggable v-if="playlist.tracks" :list="playlist.tracks.items"
+                           @start="dragging=true, locked=Date.now()" @end="dragging=false" @change="draggableUpdate"
+                           :options="{group:'playlist-draggable', sort: false}"
+                           class="tracklist next-up-tracks">
+                    <div v-if="index > getCurrentlyPlayingIndex()"
+                         v-for="(item, index) in playlist.tracks.items" :key="item.track.id">
+                        <playlist-track-item :track="item.track" :type="item.type"
+                                             :scope="[1,0,0,1,0,0,1]"></playlist-track-item>
+                    </div>
+                </draggable>
+            </div>
+
+            <div class="sidebar-recommendations">
+                <h2 class="recommended-for-you-header">Recommended for You</h2>
+                <div class="sidebar-playlist" v-if="recommendations.length > 0">
+                    <draggable :list="recommendations" @start="dragging=true, locked=Date.now()"
+                               @end="dragging=false" @change="draggableUpdate"
+                               :options="{group:'playlist-draggable'}" class="tracklist recommended-tracks">
+                        <div v-for="item in recommendations" :key="item.id">
+                            <playlist-track-item :track="item" :scope="[1,1,0,0,0,0,1]"></playlist-track-item>
+                        </div>
+                    </draggable>
+                    <div v-if="waitingForRecs()" class="loading-recommendation">
+                        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </aside>
+
+
+    <!-- Player View - Player -->
+    <section v-show="spotify_player" id="player">
+
+        <div id="track-info">
+            <div class="inner">
+                <img class="cover" v-bind:src="[[ getCover(0)]]"/>
+
+                <div v-if="spotify_player" class="track-artist-wrapper">
+                    <template v-if="spotify_player.track_window">
+                        <h3 class="song-title">[[ spotify_player.track_window.current_track.name ]]</h3>
+                        <h4 class="artist">
+                        <span class="song-artist" v-for="artist in spotify_player.track_window.current_track.artists">
+                            [[ artist.name ]]
+                        </span>
+                        </h4>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <div id="controller">
+            <div class="button-set" v-if="spotify_player">
+                <span v-on:click="togglePlay()"><i class="fa fa-play" aria-hidden="true"
+                                                   v-bind:class="[ spotify_player.paused ? 'fa-play' : 'fa-pause']"></i>
+                </span>
+                <span v-on:click="trackTransition('next')"
+                      :disabled="spotify_player.restrictions.disallow_skipping_next_reasons"><i
+                        class="fa fa-fast-forward"
+                        aria-hidden="true"></i>
+                </span>
+            </div>
+            <div class="progress-set">
+                <span v-if="spotify_player" class="progress">[[ convertMilliseconds(progress_ms) ]]</span>
+                <div id="progress-bar"></div>
+                <span v-if="spotify_player" class="total-duration">[[ convertMilliseconds(spotify_player.track_window.current_track.duration_ms) ]]</span>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<template id="tracklist-heading">
+    <div class="track-heading">
+        <span class="icons hidden"></span>
+        <span class="title">Title</span>
+        <span class="artist">Artist</span>
+        <span class="album">Album</span>
+        <span class="duration"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+        <span class="feedback hidden"></span>
+    </div>
+</template>
+
+<template id="playlist-track">
+    <div class="track available" v-bind:class="[ isCurrentlyPlaying(track) ? 'playing' : '']">
+        <!-- Track Manipulation -->
+        <div class="icon-buttons">
+            <span class="icon listening"
+                  v-if="isCurrentlyPlaying(track) && getSpotifyPlayer() && !getSpotifyPlayer().paused"><i
+                    class="fa fa-volume-up"></i></span>
+            <span class="icon" v-if="isCurrentlyPlaying(track) && getSpotifyPlayer()"><i class="fa fa-play"
+                                                                                         aria-hidden="true"
+                                                                                         v-bind:class="[ getSpotifyPlayer().paused ? 'fa-play' : 'fa-pause']"
+                                                                                         v-on:click="togglePlay()"></i></span>
+            <span class="icon" v-if="scope[0]" class="play"><i class="fa fa-play" aria-hidden="true"
+                                                               v-on:click="playTrack(track)"></i></span>
+            <span class="icon" v-if="scope[2] && !inPlaylist(track) " class="add-and-play"><i class="fa fa-play"
+                                                                                              aria-hidden="true"
+                                                                                              v-on:click="playTrack(track)"></i></span>
+            <span class="icon" v-if="scope[1] && hasPlaylist() && !inPlaylist(track)" class="add"><i class="fa fa-plus"
+                                                                                                     aria-hidden="true"
+                                                                                                     v-on:click="addTrack(track)"></i></span>
+            <span class="icon" v-if="scope[2] && scope[1] && inPlaylist(track)" class="in-playlist"><i
+                    class="fa fa-check" aria-hidden="true"></i></span>
+            <span class="draggable-icon"><i class="fa fa-arrows-v" aria-hidden="true"></i></span>
+        </div>
+
+        <!-- Track Information -->
+        <div class="track-information" v-bind:class="[feedback_enabled ? 'feedback-enabled' : 'feedback-disabled']">
+            <div class="main">
+                <div class="title">{{ track.name }}</div>
+                <div class="artist">
+                    <template v-if="scope[6]">
+                     <span class="song-artist clickable" v-for="artist in track.artists"
+                           v-on:click="do_search(artist.uri, artist.name), add_to_search_history(artist)">
+                        {{ artist.name }}
+                     </span>
+                    </template>
+                    <template v-else>
+                    <span class="song-artist" v-for="artist in track.artists">
+                          {{ artist.name }}
+                    </span>
+                    </template>
+                </div>
+                <span v-if="track.album" class="album">{{ track.album.name }}</span>
+                <span v-if="scope[5]" class="last-played">played {{ timeAgo(played_at) }}</span>
+            </div>
+            <div class="time">
+                <span class="duration">{{ convertMilliseconds(track.duration_ms) }}</span>
+            </div>
+        </div>
+
+        <!-- Feedback -->
+        <div class="feedback" v-if="feedback_enabled" v-bind:class="{ given: feedback_value !== 0}">
+            <span v-if="scope[3]" class="remove"><i class="fa fa-times" aria-hidden="true"
+                                                    v-on:click="removeTrack(track.uri)"></i></span>
+            <template v-if="scope[4]">
+
+                <div class="feedback-wrapper positive"
+                     v-bind:class="{ active: feedback_value > 0, hold: positiveIsActive }"
+                     v-on:mousedown="positveFeedback(track, feedback_value)"
+                     v-on:mouseup="clearInterval(track)">
+
+                    <div class="value-wrapper" v-bind:class="{ hidden: feedback_value <= 0 }">
+                        <span class="reset" v-on:click="resetFeedback(track)"><i class="fa fa-times"
+                                                                                 aria-hidden="true"></i></span>
+                        <span class="feedback-value">{{ feedback_value }}</span>
+                    </div>
+                    <div class="button">
+                        <span class="intensity">-{{ feedback }}</span>
+                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                    </div>
+
+                </div>
+                <div class="feedback-wrapper negative"
+                     v-bind:class="{ active: feedback_value < 0, hold: negativeIsActive }"
+                     v-on:mousedown="negativeFeedback(track, feedback_value)"
+                     v-on:mouseup="clearInterval(track)">
+
+                    <div class="button">
+                        <span class="intensity">{{ feedback }}</span>
+                        <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                    </div>
+                    <div class="value-wrapper" v-bind:class="{ hidden: feedback_value >= 0 }">
+                        <span class="feedback-value">{{ feedback_value }}</span>
+                        <span class="reset" v-on:click="resetFeedback(track)"><i class="fa fa-times"
+                                                                                 aria-hidden="true"></i></span>
+                    </div>
+
+                </div>
+
+            </template>
+        </div>
+    </div>
+
+</template>
+
+{% endverbatim %}
+
+<script>
+
+    const token = '{{ token|safe }}';
+
+</script>
+
+<!-- Libraries -->
+<script src="{% static "recrnn/js/vue.js" %}"></script>
+<script src="{% static "recrnn/js/vue-scroll-class.js" %}"></script>
+<script src="{% static "recrnn/js/Sortable.js" %}"></script>
+<script src="{% static "recrnn/js/vuedraggable.min.js" %}"></script>
+<script src="{% static "recrnn/js/moment.js" %}"></script>
+<script src="{% static "recrnn/js/spotify-web-api.js" %}"></script>
+<script src="https://sdk.scdn.co/spotify-player.js"></script>
+<script src="{% static "recrnn/js/nouislider.min.js" %}"></script>
+<!-- App -->
+<script src="{% static "recrnn/js/player.js" %}"></script>
+
+</body>
+</html>
+
+

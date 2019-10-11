@@ -1,0 +1,13 @@
+.DS_STORE
+.idea
+*.db
+*.pyc
+*.sqlite3
+/.helm/spotify-webapp
+/.helm/values.yaml
+/backup
+/keys.env
+/recrnn/model
+/util
+etc
+etc/*

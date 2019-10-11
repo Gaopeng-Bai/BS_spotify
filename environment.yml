@@ -1,0 +1,21 @@
+channels:
+- conda-forge
+dependencies:
+- python=3.6
+- numpy
+- boto3
+- django
+- pip:
+  - redis
+  - pathlib
+  - requests
+  - channels
+  - channels_redis
+  - django
+  - django-websocket-redis
+  - django-cors-headers
+  - django-shortcuts
+  - django-compressor
+  - django-sass-processor
+  - retry
+  - libsass
